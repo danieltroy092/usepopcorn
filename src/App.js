@@ -3,6 +3,14 @@ import { useState } from "react";
 import { Navbar } from "./layout/Navbar";
 import { Main } from "./layout/Main";
 
+import { Logo } from "./components/Logo.jsx";
+import { Search } from "./components/Search.jsx";
+import { Results } from "./components/Results.jsx";
+
+import { ListBox } from "./layout/ListBox.jsx";
+import { WatchedBox } from "./layout/WatchedBox.jsx";
+import { MovieList } from "./components/MovieList.jsx";
+
 const tempMovieData = [
   {
     imdbID: "tt1375666",
@@ -32,8 +40,18 @@ export default function App() {
 
   return (
     <>
-      <Navbar movies={movies} />
-      <Main movies={movies} />
+      <Navbar>
+        <Logo />
+        <Search />
+        <Results movies={movies} />
+      </Navbar>
+      <Main>
+        <ListBox>
+          <MovieList movies={movies} />
+        </ListBox>
+
+        <WatchedBox />
+      </Main>
     </>
   );
 }

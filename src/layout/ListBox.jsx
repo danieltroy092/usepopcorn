@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Button } from "../components/Button";
 import { MovieList } from "../components/MovieList";
 
-export const ListBox = ({ movies }) => {
+export const ListBox = ({ children }) => {
   const [isOpen1, setIsOpen1] = useState(true);
 
   return (
@@ -12,7 +12,7 @@ export const ListBox = ({ movies }) => {
         {isOpen1 ? "–" : "+"}
       </Button>
 
-      {isOpen1 && <MovieList movies={movies} />}
+      {isOpen1 && children}
     </div>
   );
 };
