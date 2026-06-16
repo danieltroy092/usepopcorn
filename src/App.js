@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Navbar } from "./layout/Navbar";
 import { Main } from "./layout/Main";
@@ -11,6 +11,8 @@ import { Box } from "./layout/Box.jsx";
 import { MovieList } from "./components/MovieList.jsx";
 import { WatchedSummary } from "./components/WatchedSummary.jsx";
 import { WatchedMovieList } from "./components/WatchedMovieList.jsx";
+import { Loader } from "./components/Loader.jsx";
+import { ErrorMessage } from "./components/ErrorMessage.jsx";
 
 const tempMovieData = [
   {
@@ -59,9 +61,38 @@ const tempWatchedData = [
   },
 ];
 
+const KEY = "42a2dffa";
+
 export default function App() {
-  const [movies, setMovies] = useState(tempMovieData);
-  const [watched, setWatched] = useState(tempWatchedData);
+  const [movies, setMovies] = useState([]);
+  const [watched, setWatched] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
+  const query = "avengers";
+
+  useEffect(function () {
+    async function fetchMovies() {
+      try {
+        setIsLoading(true);
+        const res = await fetch(
+          `http://www.omdbapi.com/?i=tt3896198&apikey=${KEY}&s=${query}`,
+        );
+
+        if (!res.ok)
+          throw new Error("Something went wrong with fetching movies");
+
+        const data = await res.json();
+        if (data.Response === "False") throw new Error("Movie not found");
+        setMovies(data.Search);
+      } catch (err) {
+        console.log(err.message);
+        setError(err.message);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    fetchMovies();
+  }, []);
 
   return (
     <>
@@ -72,7 +103,9 @@ export default function App() {
       </Navbar>
       <Main>
         <Box>
-          <MovieList movies={movies} />
+          {isLoading && <Loader />}
+          {!isLoading && !error && <MovieList movies={movies} />}
+          {error && <ErrorMessage message={error} />}
         </Box>
         <Box>
           <WatchedSummary watched={watched} />
