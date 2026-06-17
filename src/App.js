@@ -71,7 +71,7 @@ export default function App() {
   const [query, setQuery] = useState("");
   const [selectedId, setSelectedId] = useState(null);
 
-  //   const [watched, setWatched] = useState([]);
+  // const [watched, setWatched] = useState([]);
   const [watched, setWatched] = useState(function () {
     const storedValue = localStorage.getItem("watched");
     return JSON.parse(storedValue);
